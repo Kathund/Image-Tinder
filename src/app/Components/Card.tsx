@@ -20,7 +20,7 @@ export default function Card({ fileName, src, alt, width, height, index }: CardP
   return (
     <>
       <div
-        className={`flex h-96 w-64 scale-150 flex-col items-center justify-between rounded-2xl bg-[#343434] p-4 transition-all duration-1000 ${rightMoved ? 'translate-x-[600px] opacity-0' : ''} ${leftMoved ? 'translate-x-[-600px] opacity-0' : ''}`}>
+        className={`flex h-96 w-64 scale-150 flex-col items-center justify-between rounded-2xl bg-[#343434] p-4 transition-all duration-1000 ${rightMoved ? 'translate-x-[600px] rotate-12 opacity-0' : ''} ${leftMoved ? 'translate-x-[-600px] -rotate-12 opacity-0' : ''}`}>
         <Image src={src} alt={alt} width={width} height={height} className={'rounded-2xl'} />
         <div className="flex w-full flex-col items-center justify-center gap-2 text-white">
           <h1 className="text-2xl">{fileName}</h1>

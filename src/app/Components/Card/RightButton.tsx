@@ -1,5 +1,5 @@
 'use client';
-import { ArrowRight } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 type RightButtonProps = {
   rightButton: () => void;
@@ -7,8 +7,12 @@ type RightButtonProps = {
 
 export default function RightButton({ rightButton }: RightButtonProps) {
   return (
-    <div className={`rounded-full bg-black p-1`} onClick={rightButton}>
-      <ArrowRight color="#ff538e" />
+    <div
+      className={`rounded-full bg-black p-1`}
+      onClick={() => {
+        rightButton();
+      }}>
+      <Check color="#ff538e" />
     </div>
   );
 }

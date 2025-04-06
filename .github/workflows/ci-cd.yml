@@ -69,7 +69,7 @@ jobs:
         run: pnpm i
 
       - name: Check Prettier
-        run: pnpm prettier:check
+        run: pnpm format:check
 
   build:
     name: check build
@@ -91,5 +91,5 @@ jobs:
       - name: Install node dependencies
         run: pnpm i
 
-      - name: Check Prettier
+      - name: Check build
         run: pnpm build

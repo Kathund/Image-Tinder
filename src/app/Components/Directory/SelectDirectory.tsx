@@ -12,10 +12,8 @@ export default function SelectDirectory({ showNextButton }: SelectDirectoryProps
     const writable = await fileHandle.createWritable();
     await writable.write('this is a file that grants me permission to edit files');
     await writable.close();
-
     await window.chosenHandle.getDirectoryHandle('trash', { create: true });
     await window.chosenHandle.removeEntry('hi.txt');
-
     setTimeout(() => {
       showNextButton();
     }, 300);
@@ -25,8 +23,7 @@ export default function SelectDirectory({ showNextButton }: SelectDirectoryProps
     <>
       <div className="flex h-full w-full items-center justify-center rounded-b-2xl" onClick={getDir}>
         <div className="flex w-full flex-col items-center justify-center text-sm">
-          <p>Click me to Select Folder</p>
-          {window.chosenHandle?.name ? <p>{`You selected ${window.chosenHandle.name}`}</p> : <></>}
+          <p>Click me to Select Folder</p> {window.chosenHandle?.name ? <p>{`You selected ${window.chosenHandle.name}`}</p> : <></>}
         </div>
       </div>
     </>

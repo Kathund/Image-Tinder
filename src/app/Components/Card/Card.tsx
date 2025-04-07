@@ -16,35 +16,33 @@ type CardProps = {
   setCurrentIndex: (index: number) => void;
 };
 
+function formatDate(date: Date): string {
+  const day = date.getDate();
+  const monthName = date.toLocaleString('default', { month: 'long' });
+  const year = date.getFullYear();
+  const hour = date.getHours().toString().padStart(2, '0');
+  const minute = date.getMinutes().toString().padStart(2, '0');
+  const ordinal = (n: number): string => {
+    if (n >= 11 && n <= 13) return `${n}th`;
+    switch (n % 10) {
+      case 1:
+        return `${n}st`;
+      case 2:
+        return `${n}nd`;
+      case 3:
+        return `${n}rd`;
+      default:
+        return `${n}th`;
+    }
+  };
+  return `${ordinal(day)} of ${monthName} ${year} at ${hour}:${minute}`;
+}
+
 export default function Card({ fileName, src, alt, rawFile, index, displayFinishedMessage, currentIndex, setCurrentIndex }: CardProps) {
   const [shouldShow, setShouldShow] = useState(true);
   const [rightMoved, setRightMoved] = useState(false);
   const [leftMoved, setLeftMoved] = useState(false);
   const [mediaSize, setMediaSize] = useState<{ width: number; height: number } | null>(null);
-
-  function formatDate(date: Date): string {
-    const day = date.getDate();
-    const monthName = date.toLocaleString('default', { month: 'long' });
-    const year = date.getFullYear();
-    const hour = date.getHours().toString().padStart(2, '0');
-    const minute = date.getMinutes().toString().padStart(2, '0');
-
-    const ordinal = (n: number): string => {
-      if (n >= 11 && n <= 13) return `${n}th`;
-      switch (n % 10) {
-        case 1:
-          return `${n}st`;
-        case 2:
-          return `${n}nd`;
-        case 3:
-          return `${n}rd`;
-        default:
-          return `${n}th`;
-      }
-    };
-
-    return `${ordinal(day)} of ${monthName} ${year} at ${hour}:${minute}`;
-  }
 
   useEffect(() => {
     if (rawFile.fileType.startsWith('image/')) {
@@ -72,13 +70,25 @@ export default function Card({ fileName, src, alt, rawFile, index, displayFinish
           className={`flex ${dynamicCardStyle} scale-150 flex-col items-center justify-between rounded-2xl bg-[#343434] p-4 transition-all duration-1000 ${rightMoved ? 'translate-x-[600px] rotate-12 opacity-0' : ''} ${leftMoved ? 'translate-x-[-600px] -rotate-12 opacity-0' : ''} ${currentIndex === index ? 'opacity-100' : 'opacity-0'}`}>
           {rawFile.fileType.startsWith('image/') ? (
             mediaSize ? (
-              <Image src={src} alt={alt} width={mediaSize.width} height={mediaSize.height} className="max-h-full max-w-full rounded-2xl object-contain" />
+              <Image
+                src={src}
+                alt={alt}
+                width={mediaSize.width}
+                height={mediaSize.height}
+                className="max-h-full max-w-full rounded-2xl object-contain"
+              />
             ) : (
               <div className="flex h-64 w-64 items-center justify-center text-white">Loading image...</div>
             )
           ) : rawFile.fileType.startsWith('video/') ? (
             mediaSize ? (
-              <video controls src={src} width={mediaSize.width} height={mediaSize.height} className="max-h-full max-w-full rounded-2xl object-contain" />
+              <video
+                controls
+                src={src}
+                width={mediaSize.width}
+                height={mediaSize.height}
+                className="max-h-full max-w-full rounded-2xl object-contain"
+              />
             ) : (
               <div className="flex h-64 w-64 items-center justify-center text-white">Loading video...</div>
             )

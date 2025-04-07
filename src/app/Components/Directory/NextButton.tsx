@@ -3,15 +3,13 @@
 import { ArrowRight } from 'lucide-react';
 import type { FileInfo } from '~/app/page';
 
-export default function NextButton({
-  shouldDisplay,
-  shouldDisplayHomepage,
-  setImages
-}: {
+type NextButtonProps = {
   shouldDisplay: boolean;
   shouldDisplayHomepage: () => void;
   setImages: (files: FileInfo[]) => void;
-}) {
+};
+
+export default function NextButton({ shouldDisplay, shouldDisplayHomepage, setImages }: NextButtonProps) {
   async function handleNextClick() {
     if (window.chosenHandle === undefined) return;
     const imgs: FileInfo[] = [];
@@ -19,7 +17,6 @@ export default function NextButton({
       if (entry.kind === 'file') {
         const fileHandle = entry as FileSystemFileHandle;
         const file = await fileHandle.getFile();
-
         if (['image/png', 'image/jpeg', 'image/webp', 'video/mp4', 'video/webm'].includes(file.type)) {
           imgs.push({
             rawFile: entry,
@@ -32,7 +29,6 @@ export default function NextButton({
         }
       }
     }
-
     setImages(imgs.sort((a, b) => a.timestamp - b.timestamp));
     shouldDisplayHomepage();
   }
@@ -42,8 +38,7 @@ export default function NextButton({
       <div
         onClick={handleNextClick}
         className={`${shouldDisplay ? 'opacity-100' : 'opacity-0'} z-20 flex h-8 w-96 flex-row items-center justify-between rounded-2xl bg-black p-3 transition-all duration-500`}>
-        <p>Next</p>
-        <ArrowRight />
+        <p>Next</p> <ArrowRight />
       </div>
     </>
   );

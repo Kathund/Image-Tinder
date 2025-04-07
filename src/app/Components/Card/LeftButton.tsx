@@ -1,4 +1,5 @@
 'use client';
+
 import { X } from 'lucide-react';
 import type { FileInfo } from '~/app/page';
 
@@ -14,7 +15,6 @@ async function moveImageFile(fileName: string) {
     await writable.write(fileBlob);
     await writable.close();
     await window.chosenHandle.removeEntry(fileName);
-
     console.log(`${fileName} moved successfully to trash/${fileName}`);
   } catch (err) {
     console.error('Error moving the image file:', err);

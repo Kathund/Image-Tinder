@@ -7,7 +7,7 @@ const config = {
   bracketSpacing: true,
   proseWrap: 'always',
   singleQuote: true,
-  printWidth: 160,
+  printWidth: 140,
   endOfLine: 'lf',
   useTabs: false,
   tabWidth: 2,

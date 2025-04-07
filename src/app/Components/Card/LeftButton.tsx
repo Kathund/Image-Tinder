@@ -1,17 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 'use client';
 import { X } from 'lucide-react';
 import type { FileInfo } from '~/app/page';
 
 async function moveImageFile(fileName: string) {
   try {
-    const chosenHandle = window.chosenHandle;
-
-    const dataFolderHandle = await chosenHandle.getDirectoryHandle('trash', { create: true });
-    const fileHandle = await chosenHandle.getFileHandle(fileName);
+    if (window.chosenHandle === undefined) return;
+    const dataFolderHandle = await window.chosenHandle.getDirectoryHandle('trash', { create: true });
+    const fileHandle = await window.chosenHandle.getFileHandle(fileName);
     const newFileHandle = await dataFolderHandle.getFileHandle(fileName, { create: true });
     const file = await fileHandle.getFile();
-    const fileBlob = await file.slice();
+    const fileBlob = file.slice();
     const writable = await newFileHandle.createWritable();
     await writable.write(fileBlob);
     await writable.close();

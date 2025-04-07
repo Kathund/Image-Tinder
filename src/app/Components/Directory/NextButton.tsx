@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 'use client';
 
 import { ArrowRight } from 'lucide-react';
@@ -18,13 +13,15 @@ export default function NextButton({
   setImages: (files: FileInfo[]) => void;
 }) {
   async function handleNextClick() {
-    const files = [];
+    if (window.chosenHandle === undefined) return;
     const imgs: FileInfo[] = [];
-    // @ts-expect-error
     for await (const entry of window.chosenHandle.values()) {
       if (entry.kind === 'file') {
-        const file = await entry.getFile();
-        if (file.type === 'image/png') {
+        const fileHandle = entry as FileSystemFileHandle;
+        const file = await fileHandle.getFile();
+
+        // if (['image/png', 'image/jpeg', 'image/webp', 'video/mp4', 'video/webm'].includes(file.type)) {
+        if (['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
           imgs.push({
             rawFile: entry,
             name: file.name.split('.')[0] ?? 'UNKNOWN',
@@ -36,9 +33,7 @@ export default function NextButton({
       }
     }
 
-    console.log(files.length);
     setImages(imgs.sort((a, b) => a.timestamp - b.timestamp));
-    console.log(imgs);
     shouldDisplayHomepage();
   }
 

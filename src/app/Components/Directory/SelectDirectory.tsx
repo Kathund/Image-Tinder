@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 'use client';
 
 type SelectDirectoryProps = {
@@ -9,6 +6,7 @@ type SelectDirectoryProps = {
 
 export default function SelectDirectory({ showNextButton }: SelectDirectoryProps) {
   async function getDir() {
+    if (window.showDirectoryPicker === undefined) return;
     window.chosenHandle = await window.showDirectoryPicker();
     const fileHandle = await window.chosenHandle.getFileHandle('hi.txt', { create: true });
     const writable = await fileHandle.createWritable();

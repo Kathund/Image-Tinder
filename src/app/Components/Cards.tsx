@@ -22,18 +22,17 @@ export default function Cards({ images }: { images: FileInfo[] }) {
       </div>
       {images.map((image: FileInfo, index: number) => {
         return (
-          <div key={index} className="absolute" style={{ zIndex: index }}>
-            <Card
-              fileName={image.name}
-              src={image.path}
-              alt={image.name}
-              rawFile={image}
-              index={index}
-              displayFinishedMessage={() => setFinishedStack(true)}
-              currentIndex={currentIndex}
-              setCurrentIndex={setCurrentIndex}
-            />
-          </div>
+          <Card
+            fileName={image.name}
+            src={image.path}
+            alt={image.name}
+            rawFile={image}
+            index={index}
+            displayFinishedMessage={() => setFinishedStack(true)}
+            currentIndex={currentIndex}
+            setCurrentIndex={setCurrentIndex}
+            key={index}
+          />
         );
       })}
     </>

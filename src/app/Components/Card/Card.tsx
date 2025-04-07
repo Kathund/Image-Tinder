@@ -17,8 +17,10 @@ type CardProps = {
 };
 
 export default function Card({ fileName, src, alt, rawFile, index, displayFinishedMessage, currentIndex, setCurrentIndex }: CardProps) {
+  const [shouldShow, setShouldShow] = useState(true);
   const [rightMoved, setRightMoved] = useState(false);
   const [leftMoved, setLeftMoved] = useState(false);
+  const [mediaSize, setMediaSize] = useState<{ width: number; height: number } | null>(null);
 
   function formatDate(date: Date): string {
     const day = date.getDate();
@@ -44,55 +46,68 @@ export default function Card({ fileName, src, alt, rawFile, index, displayFinish
     return `${ordinal(day)} of ${monthName} ${year} at ${hour}:${minute}`;
   }
 
-  const [imgSize, setImgSize] = useState<{ width: number; height: number } | null>(null);
-
   useEffect(() => {
-    const img = new window.Image();
-    img.src = src;
-    img.onload = () => {
-      setImgSize({ width: img.width, height: img.height });
-    };
-  }, [src]);
+    if (rawFile.fileType.startsWith('image/')) {
+      const img = new window.Image();
+      img.src = src;
+      img.onload = () => {
+        setMediaSize({ width: img.width, height: img.height });
+      };
+    } else if (rawFile.fileType.startsWith('video/')) {
+      const video = document.createElement('video');
+      video.src = src;
+      video.onloadedmetadata = () => {
+        setMediaSize({ width: video.videoWidth, height: video.videoHeight });
+      };
+    }
+  }, [src, rawFile.fileType]);
 
-  const isPortrait = imgSize ? imgSize.height > imgSize.width : false;
+  const isPortrait = mediaSize ? mediaSize.height > mediaSize.width : false;
   const dynamicCardStyle = isPortrait ? 'min-w-64 min-h-96' : 'min-w-96 min-h-64';
 
   return (
     <>
-      <div
-        className={`flex ${dynamicCardStyle} scale-150 flex-col items-center justify-between rounded-2xl bg-[#343434] p-4 transition-all duration-1000 ${rightMoved ? 'translate-x-[600px] rotate-12 opacity-0' : ''} ${leftMoved ? 'translate-x-[-600px] -rotate-12 opacity-0' : ''} ${currentIndex === index ? 'opacity-100' : 'opacity-0'}`}>
-        {rawFile.fileType.startsWith('image/') ? (
-          <>
-            {imgSize && (
-              <Image src={src} alt={alt} width={imgSize.width} height={imgSize.height} className="max-h-full max-w-full rounded-2xl object-contain" />
-            )}
-            {!imgSize && <div className="flex h-64 w-64 items-center justify-center text-white">Loading...</div>}
-          </>
-        ) : rawFile.fileType.startsWith('video/') ? (
-          <>
-            <p>Video isn't supported yet</p>
-          </>
-        ) : (
-          <>
-            <p>File type unknown! Unable to display</p>
-          </>
-        )}
-        <div className="flex w-full flex-col items-center justify-center gap-2 text-white">
-          <h1 className="text-2xl">{fileName}</h1>
-          <p className="text-xs">{`Created: ${formatDate(new Date(rawFile.timestamp))}`}</p>
-          <CardButtons
-            leftButton={() => {
-              setLeftMoved(true);
-              setCurrentIndex(currentIndex - 1);
-              if (index === 0) displayFinishedMessage();
-            }}
-            rightButton={() => {
-              setRightMoved(true);
-              setCurrentIndex(currentIndex - 1);
-              if (index === 0) displayFinishedMessage();
-            }}
-            rawFile={rawFile}
-          />
+      <div key={index} className={`absolute ${shouldShow ? 'block' : 'hidden'}`} style={{ zIndex: index }}>
+        <div
+          className={`flex ${dynamicCardStyle} scale-150 flex-col items-center justify-between rounded-2xl bg-[#343434] p-4 transition-all duration-1000 ${rightMoved ? 'translate-x-[600px] rotate-12 opacity-0' : ''} ${leftMoved ? 'translate-x-[-600px] -rotate-12 opacity-0' : ''} ${currentIndex === index ? 'opacity-100' : 'opacity-0'}`}>
+          {rawFile.fileType.startsWith('image/') ? (
+            mediaSize ? (
+              <Image src={src} alt={alt} width={mediaSize.width} height={mediaSize.height} className="max-h-full max-w-full rounded-2xl object-contain" />
+            ) : (
+              <div className="flex h-64 w-64 items-center justify-center text-white">Loading image...</div>
+            )
+          ) : rawFile.fileType.startsWith('video/') ? (
+            mediaSize ? (
+              <video controls src={src} width={mediaSize.width} height={mediaSize.height} className="max-h-full max-w-full rounded-2xl object-contain" />
+            ) : (
+              <div className="flex h-64 w-64 items-center justify-center text-white">Loading video...</div>
+            )
+          ) : (
+            <p className="text-white">File type unknown! Unable to display</p>
+          )}
+
+          <div className="flex w-full flex-col items-center justify-center gap-2 text-white">
+            <h1 className="text-2xl">{fileName}</h1> <p className="text-xs">{`Created: ${formatDate(new Date(rawFile.timestamp))}`}</p>
+            <CardButtons
+              leftButton={() => {
+                setLeftMoved(true);
+                setCurrentIndex(currentIndex - 1);
+                setTimeout(() => {
+                  setShouldShow(false);
+                  if (index === 0) displayFinishedMessage();
+                }, 1000);
+              }}
+              rightButton={() => {
+                setRightMoved(true);
+                setCurrentIndex(currentIndex - 1);
+                setTimeout(() => {
+                  setShouldShow(false);
+                  if (index === 0) displayFinishedMessage();
+                }, 1000);
+              }}
+              rawFile={rawFile}
+            />
+          </div>
         </div>
       </div>
     </>

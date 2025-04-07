@@ -61,8 +61,22 @@ export default function Card({ fileName, src, alt, rawFile, index, displayFinish
     <>
       <div
         className={`flex ${dynamicCardStyle} scale-150 flex-col items-center justify-between rounded-2xl bg-[#343434] p-4 transition-all duration-1000 ${rightMoved ? 'translate-x-[600px] rotate-12 opacity-0' : ''} ${leftMoved ? 'translate-x-[-600px] -rotate-12 opacity-0' : ''} ${currentIndex === index ? 'opacity-100' : 'opacity-0'}`}>
-        {imgSize && <Image src={src} alt={alt} width={imgSize.width} height={imgSize.height} className="max-h-full max-w-full rounded-2xl object-contain" />}
-        {!imgSize && <div className="flex h-64 w-64 items-center justify-center text-white">Loading...</div>}
+        {rawFile.fileType.startsWith('image/') ? (
+          <>
+            {imgSize && (
+              <Image src={src} alt={alt} width={imgSize.width} height={imgSize.height} className="max-h-full max-w-full rounded-2xl object-contain" />
+            )}
+            {!imgSize && <div className="flex h-64 w-64 items-center justify-center text-white">Loading...</div>}
+          </>
+        ) : rawFile.fileType.startsWith('video/') ? (
+          <>
+            <p>Video isn't supported yet</p>
+          </>
+        ) : (
+          <>
+            <p>File type unknown! Unable to display</p>
+          </>
+        )}
         <div className="flex w-full flex-col items-center justify-center gap-2 text-white">
           <h1 className="text-2xl">{fileName}</h1>
           <p className="text-xs">{`Created: ${formatDate(new Date(rawFile.timestamp))}`}</p>

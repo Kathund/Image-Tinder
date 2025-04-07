@@ -10,6 +10,7 @@ export type FileInfo = {
   path: string;
   timestamp: number;
   size: number;
+  fileType: string;
 };
 
 export default function HomePage() {

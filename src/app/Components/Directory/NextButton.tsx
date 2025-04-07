@@ -20,14 +20,14 @@ export default function NextButton({
         const fileHandle = entry as FileSystemFileHandle;
         const file = await fileHandle.getFile();
 
-        // if (['image/png', 'image/jpeg', 'image/webp', 'video/mp4', 'video/webm'].includes(file.type)) {
-        if (['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
+        if (['image/png', 'image/jpeg', 'image/webp', 'video/mp4', 'video/webm'].includes(file.type)) {
           imgs.push({
             rawFile: entry,
             name: file.name.split('.')[0] ?? 'UNKNOWN',
             path: URL.createObjectURL(file),
             timestamp: file.lastModified,
-            size: file.size
+            size: file.size,
+            fileType: file.type
           });
         }
       }

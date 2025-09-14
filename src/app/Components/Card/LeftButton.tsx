@@ -6,7 +6,7 @@ import type { FileInfo } from '~/app/page';
 async function moveImageFile(fileName: string) {
   try {
     if (window.chosenHandle === undefined) return;
-    const dataFolderHandle = await window.chosenHandle.getDirectoryHandle('trash', { create: true });
+    const dataFolderHandle = await window.chosenHandle.getDirectoryHandle('Trash', { create: true });
     const fileHandle = await window.chosenHandle.getFileHandle(fileName);
     const newFileHandle = await dataFolderHandle.getFileHandle(fileName, { create: true });
     const file = await fileHandle.getFile();

@@ -20,7 +20,10 @@ export default function Cards({ images }: CardsProps) {
   return (
     <>
       <div className={`${finishedStack ? 'block' : 'hidden'} text-center text-4xl`}>
-        <p>You finished the image stack!</p> <p>Go back and check the original folder and delete the Trash folder</p>
+        <p>You finished the image stack!</p>{' '}
+        <p>
+          Go back and check the original folder and delete the <span className="text-pink-400">Trash</span> folder
+        </p>
       </div>
 
       {images.map((image: FileInfo, index: number) => {

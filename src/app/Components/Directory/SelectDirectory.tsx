@@ -12,7 +12,7 @@ export default function SelectDirectory({ showNextButton }: SelectDirectoryProps
     const writable = await fileHandle.createWritable();
     await writable.write('this is a file that grants me permission to edit files');
     await writable.close();
-    await window.chosenHandle.getDirectoryHandle('trash', { create: true });
+    await window.chosenHandle.getDirectoryHandle('Trash', { create: true });
     await window.chosenHandle.removeEntry('hi.txt');
     setTimeout(() => {
       showNextButton();
